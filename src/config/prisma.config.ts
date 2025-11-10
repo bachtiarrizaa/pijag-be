@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { prismaConfigType } from "../types/prismaConfig";
+// import { prismaConfigType } from "../types/prismaConfig";
 
-const prismaConfig = new PrismaClient({
+const prisma = new PrismaClient({
   log: [
     { emit: "stdout", level: "query" },
     { emit: "stdout", level: "error" },
@@ -10,10 +10,10 @@ const prismaConfig = new PrismaClient({
   ],
 });
 
-prismaConfig.$on("query", (e: prismaConfigType) => {
-    console.log(`query: ${e.query}`);
-    console.log(`Params: ${e.params}`);
-    console.log(`duration: ${e.duration}ms`);
-});
+// prisma.$on("query", (e: prismaConfigType) => {
+//     console.log(`query: ${e.query}`);
+//     console.log(`Params: ${e.params}`);
+//     console.log(`duration: ${e.duration}ms`);
+// });
 
-export default prismaConfig;
+export default prisma;
