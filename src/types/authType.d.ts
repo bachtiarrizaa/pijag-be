@@ -4,6 +4,6 @@ export interface authType {
   email: string;
   password: string;
   birth_of_date: string;
-  phone_number: number;
+  phone_number: string;
   role: number;
 }

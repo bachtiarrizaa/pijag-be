@@ -1,5 +1,5 @@
-export interface prismaConfigType {
-    query: string;
-    params: string;
-    duration: string;
-}
+// export interface prismaConfigType {
+//     query: string;
+//     params: string;
+//     duration: string;
+// }

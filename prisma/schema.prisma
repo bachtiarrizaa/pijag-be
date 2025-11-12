@@ -50,6 +50,13 @@ enum TransactionType {
 /// TABLES
 /// ==========================
 
+model BlacklistToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @db.Text
+  expired_at DateTime
+  created_at DateTime @default(now())
+}
+
 model Role {
   id          BigInt    @id @default(autoincrement())
   name        String    @unique @db.VarChar(100)

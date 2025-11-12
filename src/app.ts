@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes"
+import routes from './routes'
 
 dotenv.config();
 
@@ -14,6 +14,6 @@ app.get("/", (req, res) => {
   res.send("Pijag Coffee API running");
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api", routes);
 
 export default app;

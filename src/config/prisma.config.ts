@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-// import { prismaConfigType } from "../types/prismaConfig";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient({
   log: [
@@ -10,10 +9,14 @@ const prisma = new PrismaClient({
   ],
 });
 
-// prisma.$on("query", (e: prismaConfigType) => {
-//     console.log(`query: ${e.query}`);
-//     console.log(`Params: ${e.params}`);
-//     console.log(`duration: ${e.duration}ms`);
-// });
+prisma.$on("query", (e: Prisma.QueryEvent) => {
+  console.log(`Query: ${e.query}`);
+  console.log(`Params: ${e.params}`);
+  console.log(`Duration: ${e.duration}ms`);
+});
+
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 export default prisma;
