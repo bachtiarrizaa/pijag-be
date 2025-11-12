@@ -1,29 +1,25 @@
 import { Request, Response } from "express";
 import logoutService from "../../services/auth/logoutService";
+import { sendSuccess, sendError } from "../../utils/responseHandler";
 
 const logoutController = async (req: Request, res: Response): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      res.status(401).json({ message: "Unauthorized" });
-      return;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return sendError(res, 401, "Unauthorized: No token provided");
     }
 
     const token = authHeader.split(" ")[1];
     if (!token) {
-      res.status(401).json({ message: "Token missing" });
-      return;
+      return sendError(res, 401, "Token missing");
     }
 
-    const result = await logoutService(token); // ✅ Sekarang token dijamin string
-
-    res.status(200).json(result);
+    const result = await logoutService(token);
+    return sendSuccess(res, 200, result.message);
   } catch (error: any) {
     console.error("LogoutController Error:", error.message);
-    res.status(error.statusCode || 400).json({
-      message: error.message || "Failed to logout",
-    });
+    return sendError(res, error.statusCode || 400, error.message || "Failed to logout");
   }
 };
 

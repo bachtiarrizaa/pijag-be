@@ -3,68 +3,68 @@ import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.config";
 import { appConfig } from "../config/app.config";
 import { JwtPayloadType } from "../types/jwtType";
+import { sendError } from "../utils/responseHandler";
 
 export const authenticateToken = async (
-  req: Request, res: Response, next: NextFunction
-) => {
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        message: "Unauthorized: No token provided"
-      });
+    if (!authHeader?.startsWith("Bearer ")) {
+      return sendError(res, 401, "Unauthorized: No token provided");
     }
 
     const token = authHeader.split(" ")[1];
     if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized: Token missing"
-      });
+      return sendError(res, 401, "Unauthorized: Token missing");
     }
 
-    const blacklisted = await prisma.blacklistToken.findFirst({
-      where: { token }
-    });
-
-    if (blacklisted) {
-      return res.status(401).json({
-        message: "Token has been revoked"
-      });
+    const isBlacklisted = await prisma.blacklistToken.findFirst({ where: { token } });
+    if (isBlacklisted) {
+      return sendError(res, 401, "Token has been revoked");
     }
 
     const decoded = jwt.verify(token, appConfig.JWTSECRET as jwt.Secret) as JwtPayloadType;
-
-    (req as any).user = decoded;
+    req.user = decoded;
 
     next();
   } catch (error: any) {
     console.error("AuthMiddleware Error:", error.message);
-    return res.status(403).json({
-      message: "Invalid or expired token"
-    });
+
+    if (error instanceof jwt.TokenExpiredError) {
+      return sendError(res, 401, "Token expired, please login again");
+    }
+
+    if (error instanceof jwt.JsonWebTokenError) {
+      return sendError(res, 403, "Invalid token");
+    }
+
+    return sendError(res, 500, "Authentication failed");
   }
-}
+};
 
 export const authorizeRole = (allowedRoles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const user = (req as any).user;
-      if (!user) return res.status(403).json({ message: "Forbidden: No user data" });
+      const user = req.user;
 
+      if (!user) return sendError(res, 403, "Forbidden: No user data");
       if (!user.role_name || !allowedRoles.includes(user.role_name)) {
-        return res.status(403).json({ message: "Forbidden: Access denied" });
+        return sendError(res, 403, "Forbidden: Access denied");
       }
 
       next();
     } catch (error: any) {
       console.error("RoleMiddleware Error:", error.message);
-      return res.status(403).json({ message: "Unauthorized role" });
+      return sendError(res, 403, "Unauthorized role");
     }
   };
 };
 
-export const isAdmin = [
-  authenticateToken,
-  authorizeRole(["admin"])
-];
+export const isAdmin = [authenticateToken, authorizeRole(["admin"])];
+
+// export const isCustomer = [authenticateToken, authorizeRole(["customer"])];
+// export const isCashier = [authenticateToken, authorizeRole(["cashier"])];

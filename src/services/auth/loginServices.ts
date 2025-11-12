@@ -25,7 +25,7 @@ async function loginService(data: authType) {
     throw error;
   }
 
-  const token = jwt.sign(
+  const token = jwt.sign (
     {
       id: user.id,
       email: user.email,
@@ -38,13 +38,13 @@ async function loginService(data: authType) {
   );
 
   return {
-    message: "Login successfully",
+    // message: "Login successfully",
     data: {
       id: user.id,
-      name: user.name,
+      // name: user.name,
       username: user.username,
       email: user.email,
-      phone_number: user.phone_number,
+      // phone_number: user.phone_number,
       role: user.role?.name,
     },
     token,

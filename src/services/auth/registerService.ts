@@ -39,9 +39,18 @@ async function registerService(data: authType) {
       password: hashedPassword,
       role_id,
     },
+    include: { role: true}
   });
 
-  return user;
+  return {
+    data: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone_number: user.phone_number,
+      role: user.role?.name,
+    }
+  }
 }
 
 export default registerService;
