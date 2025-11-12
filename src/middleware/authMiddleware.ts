@@ -66,5 +66,5 @@ export const authorizeRole = (allowedRoles: string[]) => {
 
 export const isAdmin = [authenticateToken, authorizeRole(["admin"])];
 
-// export const isCustomer = [authenticateToken, authorizeRole(["customer"])];
-// export const isCashier = [authenticateToken, authorizeRole(["cashier"])];
+export const isCustomer = [authenticateToken, authorizeRole(["customer"])];
+export const isCashier = [authenticateToken, authorizeRole(["cashier"])];

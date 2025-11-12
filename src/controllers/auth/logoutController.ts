@@ -15,8 +15,9 @@ const logoutController = async (req: Request, res: Response): Promise<void> => {
       return sendError(res, 401, "Token missing");
     }
 
-    const result = await logoutService(token);
-    return sendSuccess(res, 200, result.message);
+    await logoutService(token);
+    return sendSuccess(
+      res, 200, "Logout successfully");
   } catch (error: any) {
     console.error("LogoutController Error:", error.message);
     return sendError(res, error.statusCode || 400, error.message || "Failed to logout");

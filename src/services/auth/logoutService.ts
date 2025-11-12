@@ -2,7 +2,7 @@ import prisma from "../../config/prisma.config";
 import jwt from "jsonwebtoken";
 import { appConfig } from "../../config/app.config";
 
-const logoutService = async (token: string): Promise<{ message: string }> => {
+const logoutService = async (token: string): Promise<void> => {
   try {
     // Cek apakah token sudah pernah di-blacklist
     const existing = await prisma.blacklistToken.findFirst({ where: { token } });
@@ -21,7 +21,7 @@ const logoutService = async (token: string): Promise<{ message: string }> => {
       },
     });
 
-    return { message: "Logout successfully" };
+    // return { message: "Logout successfully" };
   } catch (error: any) {
     console.error("LogoutService Error:", error.message);
     const err: any = new Error("Invalid or expired token");
