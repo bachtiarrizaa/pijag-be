@@ -4,7 +4,8 @@ import prisma from "../../config/prisma.config";
 import { authType } from "../../types/authType";
 import { appConfig } from "../../config/app.config";
 
-async function loginService(data: authType) {
+// async function loginService(data: authType) 
+const loginService = async (data: authType) => {
   const { email, password } = data;
 
   const user = await prisma.user.findUnique({

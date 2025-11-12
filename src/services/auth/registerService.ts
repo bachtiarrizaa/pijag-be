@@ -2,7 +2,8 @@ import bcrypt from "bcrypt";
 import prisma from "../../config/prisma.config";
 import { authType } from "../../types/authType";
 
-async function registerService(data: authType) {
+// async function registerService(data: authType) 
+const registerService = async (data:authType) => {
   const { name, username, email, phone_number, password } = data;
 
   // Cek email sudah terdaftar
@@ -51,6 +52,6 @@ async function registerService(data: authType) {
       role: user.role?.name,
     }
   }
-}
+};
 
 export default registerService;
