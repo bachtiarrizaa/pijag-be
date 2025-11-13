@@ -1,6 +1,5 @@
 import prisma from "../../config/prisma.config";
 import { categoryType } from "../../types/categoryType";
-import { sendError } from "../../utils/responseHandler";
 
 export const createCategoryService = async (data: categoryType) => {
   const { name } = data;
@@ -56,6 +55,19 @@ export const updateCategoryService = async (data: categoryType) => {
   if (!category) {
     const error: any = new Error ("Category not found");
     error.statusCode = 404;
+    throw error;
+  }
+
+  const existing = await prisma.category.findFirst({
+    where: {
+      name,
+      NOT: { id }
+    }
+  });
+
+  if (existing) {
+    const error: any = new Error("Category already exist");
+    error.statusCode = 409;
     throw error;
   }
 

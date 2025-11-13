@@ -62,12 +62,10 @@ export const updateCategoryController = async (req: Request, res: Response): Pro
       return sendError(res, 400, "Category name and id is required");
     }
 
-    // if (!id) {
-    //   return sendError(res, 400, "Category ID is required");
-    // }
-
     const categoryId = parseInt(id, 10);
-    if (isNaN(categoryId)) return sendError(res, 400, "Invalid category ID");
+    if (isNaN(categoryId)) {
+      return sendError(res, 400, "Invalid category ID")
+    };
 
     const updated = await updateCategoryService({ id: categoryId, name });
 
