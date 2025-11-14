@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import registerService from "../../services/auth/registerService";
+import { registerService } from "../../services/auth/registerService";
 import { sendError, sendSuccess } from "../../utils/responseHandler";
 
-const registerController = async (req: Request, res: Response): Promise<void> => {
+export const registerController = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await registerService(req.body);
     return sendSuccess(
@@ -12,9 +12,9 @@ const registerController = async (req: Request, res: Response): Promise<void> =>
   } catch (error: any) {
     console.error("RegisterController Error:", error.message);
     return sendError(
-      res, error.statusCode || 400, error.message || "Failed to register user"
+      res,
+      error.statusCode || 400,
+      error.message || "Failed to register user"
     )
   }
 };
-
-export default registerController;

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import logoutService from "../../services/auth/logoutService";
 import { sendSuccess, sendError } from "../../utils/responseHandler";
 
-const logoutController = async (req: Request, res: Response): Promise<void> => {
+export const logoutController = async (req: Request, res: Response): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -24,4 +24,4 @@ const logoutController = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export default logoutController;
+// export default logoutController;

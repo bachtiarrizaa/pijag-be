@@ -52,7 +52,12 @@ export const authorizeRole = (allowedRoles: string[]) => {
       const user = req.user;
 
       if (!user) return sendError(res, 403, "Forbidden: No user data");
-      if (!user.role_name || !allowedRoles.includes(user.role_name)) {
+      // if (!user.role_name || !allowedRoles.includes(user.role_name)) {
+      //   return sendError(res, 403, "Forbidden: Access denied");
+      // }
+
+      const userRole = user.role_name.toLowerCase();
+      if(!allowedRoles.includes(userRole)) {
         return sendError(res, 403, "Forbidden: Access denied");
       }
 

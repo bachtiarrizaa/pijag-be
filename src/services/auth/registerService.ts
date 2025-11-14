@@ -2,14 +2,14 @@ import bcrypt from "bcrypt";
 import prisma from "../../config/prisma.config";
 import { authType } from "../../types/authType";
 
-// async function registerService(data: authType) 
-const registerService = async (data:authType) => {
+export const registerService = async (data:authType) => {
   const { name, username, email, phone_number, password } = data;
 
   // Cek email sudah terdaftar
   const existingEmail = await prisma.user.findUnique({
     where: { email },
   });
+  
   if (existingEmail) {
     const error: any = new Error("Email already exists!");
     error.statusCode = 409;
@@ -28,7 +28,7 @@ const registerService = async (data:authType) => {
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  const role_id = 3;
+  const defaultRoleId = 3;
 
   // Buat user baru
   const user = await prisma.user.create({
@@ -38,10 +38,19 @@ const registerService = async (data:authType) => {
       email,
       phone_number,
       password: hashedPassword,
-      role_id,
+      role_id: defaultRoleId,
     },
     include: { role: true}
   });
+
+  if (user.role?.name.toLowerCase() === "customer") {
+    await prisma.customer.create({
+      data: {
+        user_id: user.id,
+        points: 0,
+      }
+    })
+  }
 
   return {
     data: {
@@ -53,5 +62,3 @@ const registerService = async (data:authType) => {
     }
   }
 };
-
-export default registerService;

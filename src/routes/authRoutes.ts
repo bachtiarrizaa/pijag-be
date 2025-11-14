@@ -1,8 +1,8 @@
 import express from "express";
-import loginController from "../controllers/auth/loginController";
-import logoutController from "../controllers/auth/logoutController";
+import { loginController } from "../controllers/auth/loginController";
+import { logoutController } from "../controllers/auth/logoutController";
 import { authenticateToken } from "../middleware/authMiddleware";
-import registerController from "../controllers/auth/registerController";
+import { registerController } from "../controllers/auth/registerController";
 
 const router = express.Router();
 
