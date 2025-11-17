@@ -6,7 +6,6 @@ import { Request } from "express";
 export const uploadFile = (folder: string) => {
   const uploadPath = path.join(process.cwd(), "uploads", folder);
 
-  // Pastikan folder ada
   if (!fs.existsSync(uploadPath)) {
     fs.mkdirSync(uploadPath, { recursive: true });
   }
@@ -46,4 +45,8 @@ export const uploadFile = (folder: string) => {
 
 export const uploadAvatar = [
   uploadFile("profile").single("avatar")
+];
+
+export const uploadImgProduct = [
+  uploadFile("product").single("image")
 ];

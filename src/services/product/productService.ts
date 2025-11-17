@@ -1,8 +1,16 @@
 import prisma from "../../config/prisma.config";
-import { Product } from "../../types/product";
+import { createProduct } from "../../types/product";
 
-export const createProductService = async (data: Product) => {
-  const { name, category_id, description, price, discount_percent, stock, image } = data;
+export const createProductService = async (data: createProduct) => {
+  const {
+    name,
+    category_id,
+    description,
+    price,
+    discount_percent,
+    stock,
+    image
+  } = data;
 
   const existingProduct = await prisma.product.findFirst({
     where: { name }
@@ -20,8 +28,8 @@ export const createProductService = async (data: Product) => {
       category_id,
       description,
       price,
-      discount_percent,
-      stock,
+      discount_percent: discount_percent ? Number(discount_percent) : 0,
+      stock: stock ? Number(stock) : 0,
       image,
     },
     include: { category: true }
