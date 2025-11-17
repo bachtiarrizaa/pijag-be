@@ -3,7 +3,7 @@ import prisma from "../../config/prisma.config";
 import { Auth } from "../../types/auth";
 
 export const registerService = async (data:Auth) => {
-  const { name, username, email, phone_number, password } = data;
+  const { name, username, email, password } = data;
 
   // Cek email sudah terdaftar
   const existingEmail = await prisma.user.findUnique({
@@ -36,7 +36,7 @@ export const registerService = async (data:Auth) => {
       name,
       username,
       email,
-      phone_number,
+      // phone_number,
       password: hashedPassword,
       role_id: defaultRoleId,
     },

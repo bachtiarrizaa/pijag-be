@@ -1,4 +1,4 @@
-// export interface hashPasswordType {
-//   password: string;
-//   hashed: string;
-// }
+export interface hashPasswordType {
+  password: string;
+  hashed: string;
+}

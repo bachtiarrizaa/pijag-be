@@ -1,6 +1,5 @@
 import jwt, { SignOptions, JwtPayload} from "jsonwebtoken";
 import { appConfig } from "../config/app.config";
-// import { JwtPayloadType, JwtTokenType } from "../types/jwtType";
 
 const JWT_SECRET = appConfig.JWTSECRET;
 const JWT_EXPIRES = appConfig.JWTEXPIRES;
@@ -8,6 +7,7 @@ const JWT_EXPIRES = appConfig.JWTEXPIRES;
 export function generateToken(payload: object): string {
   const options: SignOptions = {
     expiresIn: JWT_EXPIRES,
+    
   };
   return jwt.sign(payload, JWT_SECRET as string, options);
 }

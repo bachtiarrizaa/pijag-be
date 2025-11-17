@@ -32,9 +32,9 @@ export const getAllCategoriesService = async () => {
   return getAllCategory;
 }
 
-export const getCategoryByIdService = async (id: number) => {
+export const getCategoryByIdService = async (categoryId: number) => {
   const getCategoryById = await prisma.category.findUnique({
-    where: { id }
+    where: { id: categoryId }
   });
 
   if (!getCategoryById) {
@@ -46,10 +46,10 @@ export const getCategoryByIdService = async (id: number) => {
   return getCategoryById;
 };
 
-export const updateCategoryService = async (data: Category) => {
-  const { id, name } = data;
+export const updateCategoryService = async (categoryId: number, data: Category) => {
+  const { name } = data;
   const category = await prisma.category.findUnique({
-    where: { id }
+    where: { id: categoryId }
   });
 
   if (!category) {
@@ -61,7 +61,7 @@ export const updateCategoryService = async (data: Category) => {
   const existing = await prisma.category.findFirst({
     where: {
       name,
-      NOT: { id }
+      NOT: { id: categoryId }
     }
   });
 
@@ -72,16 +72,16 @@ export const updateCategoryService = async (data: Category) => {
   }
 
   const updatedCategory = await prisma.category.update({
-    where: { id },
+    where: { id: categoryId },
     data: { name },
   });
 
   return updatedCategory;
 }
 
-export const deleteCategoryService = async (id: number) => {
+export const deleteCategoryService = async (categoryId: number) => {
   const category = await prisma.category.findUnique({
-    where: { id }
+    where: { id: categoryId }
   });
 
   if (!category) {
@@ -91,7 +91,7 @@ export const deleteCategoryService = async (id: number) => {
   }
 
   const deleteCategory = await prisma.category.delete({
-    where: { id }
+    where: { id: categoryId }
   });
 
   return deleteCategory;

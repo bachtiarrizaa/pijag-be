@@ -26,7 +26,7 @@ export const createCategoryController = async (req: Request, res: Response): Pro
 export const getAllCategoriesController = async (req: Request, res: Response): Promise<void> => {
   try {
     const categories = await getAllCategoriesService();
-    return sendSuccess(res, 200, "Categories fetched successfully", categories);
+    return sendSuccess(res, 200, "All Categories fetched successfully", categories);
   } catch (error:any) {
     console.error("GetAllCategories error:", error.message);
     return sendError(res, error.statusCode || 400, error.message);
@@ -67,7 +67,7 @@ export const updateCategoryController = async (req: Request, res: Response): Pro
       return sendError(res, 400, "Invalid category ID")
     };
 
-    const updated = await updateCategoryService({ id: categoryId, name });
+    const updated = await updateCategoryService(categoryId, req.body);
 
     return sendSuccess(res, 200, "Category updated successfully", updated);
   } catch (error: any) {

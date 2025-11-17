@@ -4,7 +4,7 @@ export interface Auth {
   email: string;
   password: string;
   // birth_of_date: string;
-  phone_number: string;
+  // phone_number: string;
   // role: number;
-  role_id: number;
+  // role_id: number;
 }

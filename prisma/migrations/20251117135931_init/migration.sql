@@ -65,13 +65,12 @@ CREATE TABLE `Category` (
 -- CreateTable
 CREATE TABLE `Product` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `category_id` BIGINT NULL,
+    `category_id` BIGINT NOT NULL,
     `name` VARCHAR(100) NOT NULL,
     `description` TEXT NOT NULL,
     `price` DECIMAL(10, 2) NOT NULL,
-    `discount_percent` DECIMAL(5, 2) NOT NULL DEFAULT 0.0,
     `stock` INTEGER NOT NULL DEFAULT 0,
-    `image` VARCHAR(255) NULL,
+    `image` VARCHAR(255) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -111,7 +110,6 @@ CREATE TABLE `CartItem` (
     `product_id` BIGINT NOT NULL,
     `quantity` INTEGER NOT NULL DEFAULT 1,
     `price` DECIMAL(10, 2) NOT NULL,
-    `discount_percent` DECIMAL(5, 2) NOT NULL DEFAULT 0.0,
     `subtotal` DECIMAL(10, 2) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -122,31 +120,12 @@ CREATE TABLE `CartItem` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `GlobalDiscount` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
-    `description` TEXT NULL,
-    `type` ENUM('percent', 'fixed') NOT NULL,
-    `value` DECIMAL(10, 2) NOT NULL,
-    `min_order_amount` DECIMAL(10, 2) NOT NULL DEFAULT 0.0,
-    `start_date` DATETIME(3) NULL,
-    `end_date` DATETIME(3) NULL,
-    `is_active` BOOLEAN NOT NULL DEFAULT true,
-    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updated_at` DATETIME(3) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Order` (
     `id` BIGINT NOT NULL AUTO_INCREMENT,
     `customer_id` BIGINT NOT NULL,
     `cashier_id` BIGINT NOT NULL,
-    `global_discount_id` BIGINT NULL,
     `order_code` VARCHAR(191) NOT NULL,
     `total` DECIMAL(10, 2) NOT NULL,
-    `discount_amount` DECIMAL(10, 2) NOT NULL DEFAULT 0.0,
     `final_total` DECIMAL(10, 2) NOT NULL,
     `status` ENUM('pending', 'processing', 'ready', 'completed', 'canceled') NOT NULL DEFAULT 'pending',
     `payment_status` ENUM('pending', 'paid', 'failed') NOT NULL DEFAULT 'pending',
@@ -156,7 +135,6 @@ CREATE TABLE `Order` (
     UNIQUE INDEX `Order_order_code_key`(`order_code`),
     INDEX `Order_customer_id_idx`(`customer_id`),
     INDEX `Order_cashier_id_idx`(`cashier_id`),
-    INDEX `Order_global_discount_id_idx`(`global_discount_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -167,7 +145,6 @@ CREATE TABLE `OrderItem` (
     `product_id` BIGINT NOT NULL,
     `quantity` INTEGER NOT NULL,
     `price` DECIMAL(10, 2) NOT NULL,
-    `discount_percent` DECIMAL(5, 2) NOT NULL DEFAULT 0.0,
     `subtotal` DECIMAL(10, 2) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -248,7 +225,7 @@ ALTER TABLE `User` ADD CONSTRAINT `User_role_id_fkey` FOREIGN KEY (`role_id`) RE
 ALTER TABLE `Customer` ADD CONSTRAINT `Customer_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Product` ADD CONSTRAINT `Product_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Product` ADD CONSTRAINT `Product_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Wishlist` ADD CONSTRAINT `Wishlist_customer_id_fkey` FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -270,9 +247,6 @@ ALTER TABLE `Order` ADD CONSTRAINT `Order_customer_id_fkey` FOREIGN KEY (`custom
 
 -- AddForeignKey
 ALTER TABLE `Order` ADD CONSTRAINT `Order_cashier_id_fkey` FOREIGN KEY (`cashier_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Order` ADD CONSTRAINT `Order_global_discount_id_fkey` FOREIGN KEY (`global_discount_id`) REFERENCES `GlobalDiscount`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_order_id_fkey` FOREIGN KEY (`order_id`) REFERENCES `Order`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

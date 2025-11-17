@@ -39,13 +39,10 @@ export const loginService = async (data: Auth) => {
   );
 
   return {
-    // message: "Login successfully",
     data: {
       id: user.id,
-      // name: user.name,
       username: user.username,
       email: user.email,
-      // phone_number: user.phone_number,
       role: user.role?.name,
     },
     token,

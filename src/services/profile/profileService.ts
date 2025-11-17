@@ -39,10 +39,10 @@ export const updateProfileService = async (userId: number, data: User) => {
   }
 
   const dataToUpdate: any = {
-    name,
-    username,
-    email,
-    phone_number,
+    // name,
+    // username,
+    // email,
+    // phone_number,
   };
 
   if (birth_of_date) {

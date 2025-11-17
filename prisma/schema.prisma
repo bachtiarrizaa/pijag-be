@@ -10,11 +10,6 @@ datasource db {
 /// ==========================
 /// ENUMERATIONS
 /// ==========================
-enum DiscountType {
-  percent
-  fixed
-}
-
 enum OrderStatus {
   pending
   processing
@@ -114,13 +109,12 @@ model Category {
 
 model Product {
   id               BigInt     @id @default(autoincrement())
-  category_id      BigInt?
+  category_id      BigInt
   name             String     @db.VarChar(100)
   description      String     @db.Text
   price            Decimal    @db.Decimal(10,2)
-  discount_percent Decimal     @default(0.0) @db.Decimal(5,2)
   stock            Int        @default(0)
-  image            String?    @db.VarChar(255)
+  image            String     @db.VarChar(255)
   created_at       DateTime   @default(now())
   updated_at       DateTime   @updatedAt
 
@@ -166,7 +160,6 @@ model CartItem {
   product_id       BigInt
   quantity         Int        @default(1)
   price            Decimal    @db.Decimal(10,2)
-  discount_percent Decimal     @default(0.0) @db.Decimal(5,2)
   subtotal         Decimal    @db.Decimal(10,2)
   created_at       DateTime   @default(now())
   updated_at       DateTime   @updatedAt
@@ -178,30 +171,12 @@ model CartItem {
   @@index([product_id])
 }
 
-model GlobalDiscount {
-  id               BigInt       @id @default(autoincrement())
-  name             String       @db.VarChar(100)
-  description      String?      @db.Text
-  type             DiscountType
-  value            Decimal      @db.Decimal(10,2)
-  min_order_amount Decimal      @default(0.0) @db.Decimal(10,2)
-  start_date       DateTime?
-  end_date         DateTime?
-  is_active        Boolean      @default(true)
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @updatedAt
-
-  orders           Order[]
-}
-
 model Order {
   id                 BigInt        @id @default(autoincrement())
   customer_id        BigInt
   cashier_id         BigInt
-  global_discount_id BigInt?
   order_code         String        @unique
   total              Decimal       @db.Decimal(10,2)
-  discount_amount    Decimal       @default(0.0) @db.Decimal(10,2)
   final_total        Decimal       @db.Decimal(10,2)
   status             OrderStatus   @default(pending)
   payment_status     PaymentStatus @default(pending)
@@ -210,14 +185,12 @@ model Order {
 
   customer           Customer      @relation(fields: [customer_id], references: [id])
   cashier            User          @relation("CashierOrders", fields: [cashier_id], references: [id])
-  global_discount    GlobalDiscount? @relation(fields: [global_discount_id], references: [id])
   order_items        OrderItem[]
   payments           Payment[]
   transactions       Transaction[]
 
   @@index([customer_id])
   @@index([cashier_id])
-  @@index([global_discount_id])
 }
 
 model OrderItem {
@@ -226,7 +199,6 @@ model OrderItem {
   product_id       BigInt
   quantity         Int
   price            Decimal    @db.Decimal(10,2)
-  discount_percent Decimal     @default(0.0) @db.Decimal(5,2)
   subtotal         Decimal    @db.Decimal(10,2)
   created_at       DateTime   @default(now())
   updated_at       DateTime   @updatedAt
