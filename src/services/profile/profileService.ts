@@ -49,6 +49,10 @@ export const updateProfileService = async (userId: number, data: User) => {
     dataToUpdate.birth_of_date = new Date(birth_of_date);
   }
 
+  if(avatar) {
+    dataToUpdate.avatar = avatar;
+  }
+
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: dataToUpdate,

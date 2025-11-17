@@ -5,12 +5,17 @@ import { sendError, sendSuccess } from "../../utils/responseHandler";
 export const updatedUserController = async(req:Request, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
+    const avatar = req.file?.filename;
 
     if (!userId) {
       return sendError(res, 401, "Unauthorized");
     }
+    const reqBody = {
+      ...req.body,
+      avatar
+    };
 
-    const updateUser = await updateProfileService(userId, req.body);
+    const updateUser = await updateProfileService(userId, reqBody);
     return sendSuccess(res, 200, "Profile updated successfully", updateUser);
   } catch (error: any) {
     console.error("UpdateProfile Error:", error.message);
