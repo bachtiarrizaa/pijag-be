@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import loginService from "../../services/auth/loginServices";
+import { loginService } from "../../services/auth/loginServices";
 import { sendError, sendSuccess } from "../../utils/responseHandler";
 
 export const loginController = async (req: Request, res: Response): Promise<void> => {
@@ -16,5 +16,3 @@ export const loginController = async (req: Request, res: Response): Promise<void
     )
   }
 };
-
-// export default loginController;

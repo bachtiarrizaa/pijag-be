@@ -3,7 +3,6 @@ import { createProductController } from "../controllers/product/productControlle
 import { isAdmin } from "../middleware/authMiddleware";
 
 const router = Router();
-router.use(isAdmin);
 
 router.post("/", isAdmin, createProductController)
 

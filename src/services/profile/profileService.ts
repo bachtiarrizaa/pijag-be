@@ -1,8 +1,8 @@
 import prisma from "../../config/prisma.config";
-import { usertype } from "../../types/usertype";
+import { User } from "../../types/user";
 
-export const updateProfileService = async (userId: number, data: usertype) => {
-  const { name, username, email, phone_number, birth_of_date } = data;
+export const updateProfileService = async (userId: number, data: User) => {
+  const { name, avatar, username, email, phone_number, birth_of_date } = data;
 
   const user = await prisma.user.findUnique({
     where: { id: userId }

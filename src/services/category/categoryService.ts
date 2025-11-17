@@ -1,7 +1,7 @@
 import prisma from "../../config/prisma.config";
-import { categoryType } from "../../types/categoryType";
+import { Category } from "../../types/category";
 
-export const createCategoryService = async (data: categoryType) => {
+export const createCategoryService = async (data: Category) => {
   const { name } = data;
   const existing = await prisma.category.findFirst({
     where: { name }
@@ -46,7 +46,7 @@ export const getCategoryByIdService = async (id: number) => {
   return getCategoryById;
 };
 
-export const updateCategoryService = async (data: categoryType) => {
+export const updateCategoryService = async (data: Category) => {
   const { id, name } = data;
   const category = await prisma.category.findUnique({
     where: { id }

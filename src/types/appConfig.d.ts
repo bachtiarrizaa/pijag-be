@@ -1,6 +1,6 @@
 import { SignOptions } from "jsonwebtoken";
 
-export interface AppConfigType {
+export interface AppConfig {
   PORT: number;
   ENV: string;
   JWTSECRET: string;

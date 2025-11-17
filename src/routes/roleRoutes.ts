@@ -11,9 +11,9 @@ const router = express.Router();
 
 router.use(isAdmin);
 
-router.post("/", isAdmin, createRoleController);
-router.get("/", isAdmin, getAllRoleController);
-router.put("/:id", isAdmin, updateRoleController);
-router.delete("/:id", isAdmin, deleteRoleController);
+router.post("/", createRoleController);
+router.get("/", getAllRoleController);
+router.put("/:id", updateRoleController);
+router.delete("/:id", deleteRoleController);
 
 export default router;

@@ -2,7 +2,8 @@ import { Response, Request, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.config";
 import { appConfig } from "../config/app.config";
-import { JwtPayloadType } from "../types/jwtType";
+// import { JwtPayload } from "../types/jwtType";
+import { JwtPayload } from "jsonwebtoken";
 import { sendError } from "../utils/responseHandler";
 
 export const authenticateToken = async (
@@ -27,7 +28,7 @@ export const authenticateToken = async (
       return sendError(res, 401, "Token has been revoked");
     }
 
-    const decoded = jwt.verify(token, appConfig.JWTSECRET as jwt.Secret) as JwtPayloadType;
+    const decoded = jwt.verify(token, appConfig.JWTSECRET as jwt.Secret) as JwtPayload;
     req.user = decoded;
 
     next();
@@ -52,9 +53,6 @@ export const authorizeRole = (allowedRoles: string[]) => {
       const user = req.user;
 
       if (!user) return sendError(res, 403, "Forbidden: No user data");
-      // if (!user.role_name || !allowedRoles.includes(user.role_name)) {
-      //   return sendError(res, 403, "Forbidden: Access denied");
-      // }
 
       const userRole = user.role_name.toLowerCase();
       if(!allowedRoles.includes(userRole)) {

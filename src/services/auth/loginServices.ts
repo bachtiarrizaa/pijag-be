@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../../config/prisma.config";
-import { authType } from "../../types/authType";
+import { Auth } from "../../types/auth";
 import { appConfig } from "../../config/app.config";
 
 // async function loginService(data: authType) 
-const loginService = async (data: authType) => {
+export const loginService = async (data: Auth) => {
   const { email, password } = data;
 
   const user = await prisma.user.findUnique({
@@ -51,5 +51,3 @@ const loginService = async (data: authType) => {
     token,
   };
 }
-
-export default loginService;

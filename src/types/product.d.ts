@@ -1,5 +1,4 @@
-// src/types/productType.ts
-export interface productType {
+export interface Product {
   id: number;
   category_id: number;
   name: string;

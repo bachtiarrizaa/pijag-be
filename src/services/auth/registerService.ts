@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import prisma from "../../config/prisma.config";
-import { authType } from "../../types/authType";
+import { Auth } from "../../types/auth";
 
-export const registerService = async (data:authType) => {
+export const registerService = async (data:Auth) => {
   const { name, username, email, phone_number, password } = data;
 
   // Cek email sudah terdaftar

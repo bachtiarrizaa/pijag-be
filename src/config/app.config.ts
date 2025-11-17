@@ -1,6 +1,6 @@
-import { AppConfigType } from "../types/appConfig";
+import { AppConfig } from "../types/appConfig";
 
-export const appConfig: AppConfigType = {
+export const appConfig: AppConfig = {
   PORT: parseInt(process.env.PORT || "3000", 10),
   ENV: process.env.ENV || "development",
   JWTSECRET: process.env.JWTSECRET || "secret",

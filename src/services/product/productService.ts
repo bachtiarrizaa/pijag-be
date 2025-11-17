@@ -1,7 +1,7 @@
 import prisma from "../../config/prisma.config";
-import { productType } from "../../types/productType";
+import { Product } from "../../types/product";
 
-export const createProductService = async (data: productType) => {
+export const createProductService = async (data: Product) => {
   const { name, category_id, description, price, discount_percent, stock, image } = data;
 
   const existingProduct = await prisma.product.findFirst({

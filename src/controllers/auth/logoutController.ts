@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import logoutService from "../../services/auth/logoutService";
+import { logoutService } from "../../services/auth/logoutService";
 import { sendSuccess, sendError } from "../../utils/responseHandler";
 
 export const logoutController = async (req: Request, res: Response): Promise<void> => {
@@ -23,5 +23,3 @@ export const logoutController = async (req: Request, res: Response): Promise<voi
     return sendError(res, error.statusCode || 400, error.message || "Failed to logout");
   }
 };
-
-// export default logoutController;
