@@ -142,3 +142,31 @@ export const updateCartItemService = async (cartItemId: number, data: Cart) => {
 
   return updatedItem;
 }
+
+export const deleteCartItemService = async (cartItemId: number) => {
+  const cartItem = await prisma.cartItem.findUnique({
+    where: { id: cartItemId}
+  });
+
+  if (!cartItem) {
+    const error: any = new Error ("Cart item not found");
+    error.statusCode = 404;
+    throw error;
+  };
+
+  const deleteitem = await prisma.cartItem.delete({
+    where: { id: cartItemId }
+  });
+
+  const total = await prisma.cartItem.aggregate({
+    where: { cart_id: cartItem.cart_id },
+    _sum: { subtotal: true }
+  });
+
+  await prisma.cart.update({
+    where: { id: cartItem.cart_id },
+    data: { total: total._sum.subtotal || new Decimal(0)}
+  });
+
+  return deleteitem;
+}

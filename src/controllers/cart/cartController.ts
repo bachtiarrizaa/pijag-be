@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addItemtoCartService, getCartService, updateCartItemService } from "../../services/cart/cartService";
+import { addItemtoCartService, deleteCartItemService, getCartService, updateCartItemService } from "../../services/cart/cartService";
 import { sendError, sendSuccess } from "../../utils/responseHandler";
 import { Cart } from "../../types/cart";
 
@@ -29,7 +29,7 @@ export const addItemToCartController = async (req: Request, res: Response): Prom
   }
 };
 
-export const updateItemController = async (req:Request, res: Response): Promise<void> => {
+export const updateCartItemController = async (req:Request, res: Response): Promise<void> => {
   try {
     const cartItemId = Number(req.params.id);
 
@@ -50,3 +50,19 @@ export const updateItemController = async (req:Request, res: Response): Promise<
     return sendError(res, error.statusCode || 400, error.message);
   }
 };
+
+export const deleteCartItemController = async(req:Request, res:Response): Promise<void> => {
+  try {
+    const cartItemId = Number(req.params.id);
+
+    if (isNaN(cartItemId)) {
+      return sendError(res, 400, "Invalid cart item ID");
+    }
+
+    const deleteItem = await deleteCartItemService(cartItemId);
+    return sendSuccess(res, 200, "Cart item, deleted successfully", deleteItem);
+  } catch (error: any) {
+    console.error("GetCart Error:", error.message);
+    return sendError(res, error.statusCode || 400, error.message);
+  }
+}
