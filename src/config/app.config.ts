@@ -1,4 +1,4 @@
-import { AppConfig } from "../types/appConfig";
+import { AppConfig } from "../types/config";
 
 export const appConfig: AppConfig = {
   PORT: parseInt(process.env.PORT || "3000", 10),

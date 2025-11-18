@@ -1,4 +1,4 @@
-import { SignOptions } from "jsonwebtoken";
+import type { SignOptions } from "jsonwebtoken";
 
 export interface AppConfig {
   PORT: number;
