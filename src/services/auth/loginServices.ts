@@ -1,10 +1,9 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import prisma from "../../config/prisma.config";
 import { Auth } from "../../types/auth";
 import { appConfig } from "../../config/app.config";
 
-// async function loginService(data: authType) 
 export const loginService = async (data: Auth) => {
   const { email, password } = data;
 
@@ -34,8 +33,8 @@ export const loginService = async (data: Auth) => {
       role_id: user.role_id,
       role_name: user.role?.name,
     },
-    appConfig.JWTSECRET as jwt.Secret,
-    { expiresIn: appConfig.JWTEXPIRES }
+    appConfig.JWTSECRET,
+    { expiresIn: appConfig.JWTEXPIRES } as SignOptions
   );
 
   return {
