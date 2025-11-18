@@ -7,6 +7,7 @@ import roleRoutes from './roleRoutes';
 import profileRoutes from './profileRoutes';
 import productRoutes from "./productRoutes";
 import shiftRoutes from "./shiftRoutes";
+import cartRoutes from "./cartRoutes"
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use("/role", roleRoutes)
 router.use("/profile", profileRoutes);
 router.use("/product", productRoutes);
 router.use("/cashier", shiftRoutes)
+router.use("/cart", cartRoutes);
 
 export default router;
