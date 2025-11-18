@@ -24,7 +24,10 @@ export const addItemtoCartService = async (customerId: number, data: Cart) => {
   });
 
   if (!customer) {
-    throw { statusCode: 400, message: "Customer record not found." };
+    // throw { statusCode: 400, message:  };
+    const error: any = new Error("Customer record not found.")
+    error.statusCode = 400;
+    throw error;
   }
 
   // cek atau buat cart
@@ -49,7 +52,10 @@ export const addItemtoCartService = async (customerId: number, data: Cart) => {
   });
 
   if (!product) {
-    throw { statusCode: 404, message: "Product not found" };
+    // throw { statusCode: 404, message: "Product not found" };
+    const error: any = new Error("Product not found")
+    error.statusCode = 400;
+    throw error;
   }
 
   const price = product.price.toNumber();
@@ -90,3 +96,49 @@ export const addItemtoCartService = async (customerId: number, data: Cart) => {
 
   return cartItem;
 };
+
+export const updateCartItemService = async (cartItemId: number, data: Cart) => {
+  const { quantity } = data;
+
+  const cartItem = await prisma.cartItem.findUnique({
+    where: { id: cartItemId }
+  });
+
+  if (!cartItem) {
+    const error: any = new Error("Cart item not found");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (quantity === 0) {
+    await prisma.cartItem.delete({
+      where: { id: cartItemId }
+    });
+
+    const total = await prisma.cartItem.aggregate({
+      where: { cart_id: cartItem.cart_id },
+      _sum: { subtotal: true }
+    });
+
+    return { message: "Item removed from cart"};
+  }
+
+  const subtotal = new Decimal(cartItem.price).mul(quantity);
+
+  const updatedItem = await prisma.cartItem.update({
+    where: { id: cartItemId },
+    data: { quantity, subtotal }
+  });
+
+  const total = await prisma.cartItem.aggregate({
+    where: { cart_id: cartItem.cart_id },
+    _sum: { subtotal: true }
+  });
+
+  await prisma.cart.update({
+    where: { id: cartItem.cart_id },
+    data: { total: total._sum.subtotal || new Decimal(0)}
+  });
+
+  return updatedItem;
+}

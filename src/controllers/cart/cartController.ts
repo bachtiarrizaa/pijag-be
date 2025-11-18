@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addItemtoCartService, getCartService } from "../../services/cart/cartService";
+import { addItemtoCartService, getCartService, updateCartItemService } from "../../services/cart/cartService";
 import { sendError, sendSuccess } from "../../utils/responseHandler";
 import { Cart } from "../../types/cart";
 
@@ -18,11 +18,6 @@ export const getCartController = async (req: Request, res: Response): Promise<vo
 export const addItemToCartController = async (req: Request, res: Response): Promise<void> => {
   try {
     const customerId = req.user?.customerId;
-    // const userId = req.user?.id;
-
-    // if (!userId) {
-    //   return sendError(res, 401, "Unauthorized")
-    // }
 
     const data: Cart = req.body;
 
@@ -32,4 +27,26 @@ export const addItemToCartController = async (req: Request, res: Response): Prom
     console.error("GetCart Error:", error.message);
     return sendError(res, error.statusCode || 400, error.message);
   }
-}
+};
+
+export const updateItemController = async (req:Request, res: Response): Promise<void> => {
+  try {
+    const cartItemId = Number(req.params.id);
+
+    if (isNaN(cartItemId)) {
+      return sendError(res, 400, "Invalid cart item ID");
+    }
+
+    const data: Cart = req.body;
+
+    const updateItem = await updateCartItemService(cartItemId, data);
+    
+    if ("message" in updateItem && updateItem.message === "Item removed from cart") {
+      return sendSuccess(res, 200, "Item removed from cart", null);
+    }
+    return sendSuccess(res, 201, "Item added to cart successfully", updateItem);
+  } catch (error: any) {
+    console.error("GetCart Error:", error.message);
+    return sendError(res, error.statusCode || 400, error.message);
+  }
+};
