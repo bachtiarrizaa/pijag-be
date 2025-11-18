@@ -38,24 +38,36 @@ export const updateProfileService = async (userId: number, data: User) => {
     }
   }
 
-  const dataToUpdate: any = {
-    // name,
-    // username,
-    // email,
-    // phone_number,
-  };
+  const updatedData: any = {};
 
-  if (birth_of_date) {
-    dataToUpdate.birth_of_date = new Date(birth_of_date);
+  if (name !== undefined){
+    updatedData.name = name;
   }
 
-  if(avatar) {
-    dataToUpdate.avatar = avatar;
+  if (name !== undefined) {
+    updatedData.name = name;
+  }
+  if (email !== undefined) {
+    updatedData.email = email;
+  }
+  if (username !== undefined) {
+    updatedData.username = username;
+  }
+  if (phone_number !== undefined) {
+    updatedData.phone_number = phone_number;
+  }
+
+  if (birth_of_date !== undefined) {
+    updatedData.birth_of_date = new Date(birth_of_date);
+  }
+
+  if(avatar !== undefined ) {
+    updatedData.avatar = avatar;
   }
 
   const updatedUser = await prisma.user.update({
     where: { id: userId },
-    data: dataToUpdate,
+    data: updatedData,
     include: { role: true}
   });
 
