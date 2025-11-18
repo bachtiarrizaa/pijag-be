@@ -28,7 +28,7 @@ export const registerService = async (data:Auth) => {
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  const defaultRoleId = 3;
+  const defaultRoleId = 2;
 
   // Buat user baru
   const user = await prisma.user.create({

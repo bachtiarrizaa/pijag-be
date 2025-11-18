@@ -41,6 +41,11 @@ enum TransactionType {
   expense
 }
 
+enum ShiftStatus {
+  OPEN
+  CLOSED
+}
+
 /// ==========================
 /// TABLES
 /// ==========================
@@ -229,11 +234,12 @@ model Payment {
 model Shift {
   id         BigInt     @id @default(autoincrement())
   user_id    BigInt
-  start_time DateTime?
+  start_time DateTime
   end_time   DateTime?
   cash_start Decimal     @default(0.0) @db.Decimal(10,2)
   cash_end   Decimal     @default(0.0) @db.Decimal(10,2)
   notes      String?     @db.Text
+  status     ShiftStatus
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
 

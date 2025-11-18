@@ -6,6 +6,7 @@ import categoryRoutes from './categoryRoutes';
 import roleRoutes from './roleRoutes';
 import profileRoutes from './profileRoutes';
 import productRoutes from "./productRoutes";
+import shiftRoutes from "./shiftRoutes";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/category", categoryRoutes);
 router.use("/role", roleRoutes)
 router.use("/profile", profileRoutes);
 router.use("/product", productRoutes);
+router.use("/cashier", shiftRoutes)
 
 export default router;
