@@ -46,6 +46,12 @@ enum ShiftStatus {
   CLOSED
 }
 
+enum OrderSource {
+  customer
+  cashier
+}
+
+
 /// ==========================
 /// TABLES
 /// ==========================
@@ -179,8 +185,9 @@ model CartItem {
 model Order {
   id                 BigInt        @id @default(autoincrement())
   customer_id        BigInt
-  cashier_id         BigInt
+  cashier_id         BigInt?
   order_code         String        @unique
+  source             OrderSource
   total              Decimal       @db.Decimal(10,2)
   final_total        Decimal       @db.Decimal(10,2)
   status             OrderStatus   @default(pending)
@@ -189,7 +196,7 @@ model Order {
   updated_at         DateTime      @updatedAt
 
   customer           Customer      @relation(fields: [customer_id], references: [id])
-  cashier            User          @relation("CashierOrders", fields: [cashier_id], references: [id])
+  cashier            User?          @relation("CashierOrders", fields: [cashier_id], references: [id])
   order_items        OrderItem[]
   payments           Payment[]
   transactions       Transaction[]

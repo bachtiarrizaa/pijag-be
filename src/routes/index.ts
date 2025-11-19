@@ -8,6 +8,7 @@ import profileRoutes from './profileRoutes';
 import productRoutes from "./productRoutes";
 import shiftRoutes from "./shiftRoutes";
 import cartRoutes from "./cartRoutes"
+import orderRoutes from "./orderRoutes";
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.use("/profile", profileRoutes);
 router.use("/product", productRoutes);
 router.use("/cashier", shiftRoutes)
 router.use("/cart", cartRoutes);
+router.use("/order", orderRoutes);
 
 export default router;
