@@ -4,26 +4,27 @@ import type { LoginDto, RefreshTokenDto, RegisterDto } from '../dtos/auth.dtos'
 import { CustomerRepository } from '../repositories/customer.repository'
 import { UserRepository } from '../repositories/user.repository'
 import { ErrorHandler } from '../utils/error.utils'
-import {
-  signAccessToken,
-  signRefreshToken,
-  verifyRefreshToken,
-} from '../utils/jwt.utils'
+// import {
+//   signAccessToken,
+//   signRefreshToken,
+//   verifyRefreshToken,
+// } from '../utils/jwt.utils'
 import { BlacklistTokenRepository } from '../repositories/blacklist-token.repository'
 import type { JwtPayload } from 'jsonwebtoken'
+import { JwtUtils } from '../utils/jwt.utils'
 
 const CUSTOMER_ROLE_NAME = 'customer'
 
 export class AuthService {
   static async register(registerDto: RegisterDto) {
-    const existingUsername = await UserRepository.findUsername(
+    const existingUsername = await UserRepository.findByUsername(
       registerDto.username
     )
     if (existingUsername) {
       throw new ErrorHandler(409, 'Username already taken')
     }
 
-    const existingEmail = await UserRepository.findEmail(registerDto.email)
+    const existingEmail = await UserRepository.findByEmail(registerDto.email)
     if (existingEmail) {
       throw new ErrorHandler(409, 'Email already taken')
     }
@@ -56,8 +57,8 @@ export class AuthService {
       roleName: user.role.name,
     }
 
-    const accessToken = signAccessToken(payload)
-    const refreshToken = signRefreshToken(payload)
+    const accessToken = JwtUtils.signAccessToken(payload)
+    const refreshToken = JwtUtils.signRefreshToken(payload)
 
     return {
       accessToken,
@@ -77,7 +78,7 @@ export class AuthService {
   static async refreshToken(refreshTokenDto: RefreshTokenDto) {
     let decoded: JwtPayload
     try {
-      decoded = verifyRefreshToken(refreshTokenDto.refreshToken)
+      decoded = JwtUtils.verifyRefreshToken(refreshTokenDto.refreshToken)
     } catch (error) {
       console.log('JWT Error:', error)
       if (error instanceof Jwt.TokenExpiredError) {
@@ -97,8 +98,8 @@ export class AuthService {
       roleId: user.role.id,
       roleName: user.role.name,
     }
-    const accessToken = signAccessToken(payload)
-    const refreshToken = signRefreshToken(payload)
+    const accessToken = JwtUtils.signAccessToken(payload)
+    const refreshToken = JwtUtils.signRefreshToken(payload)
 
     return { accessToken, refreshToken }
   }

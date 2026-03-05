@@ -1,16 +1,16 @@
 import type { NextFunction, Request, Response } from 'express'
 import { AuthService } from '../services/auth.service'
-import {
-  loginValidation,
-  refreshTokenValidation,
-  registerValidation,
-} from '../validations/auth.validation'
 import { validateRequest } from '../utils/validation.utils'
+import {
+  loginSchema,
+  refreshTokenSchema,
+  registerSchema,
+} from '../validations/auth.validation'
 
 export class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const parsed = registerValidation.safeParse(req.body)
+      const parsed = registerSchema.safeParse(req.body)
       if (!parsed.success) {
         return validateRequest(res, parsed.error)
       }
@@ -28,7 +28,7 @@ export class AuthController {
 
   static async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const parsed = loginValidation.safeParse(req.body)
+      const parsed = loginSchema.safeParse(req.body)
       if (!parsed.success) {
         return validateRequest(res, parsed.error)
       }
@@ -70,7 +70,7 @@ export class AuthController {
 
   static async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const parsed = refreshTokenValidation.safeParse(req.body)
+      const parsed = refreshTokenSchema.safeParse(req.body)
       if (!parsed.success) {
         return validateRequest(res, parsed.error)
       }

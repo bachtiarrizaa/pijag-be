@@ -27,13 +27,13 @@ export class UserRepository {
     })
   }
 
-  static async findUsername(username: string) {
+  static async findByUsername(username: string) {
     return prisma.user.findUnique({
       where: { username },
     })
   }
 
-  static async findEmail(email: string) {
+  static async findByEmail(email: string) {
     return prisma.user.findFirst({
       where: { email },
     })
@@ -67,6 +67,13 @@ export class UserRepository {
           select: { id: true, name: true },
         },
       },
+    })
+  }
+
+  static async updatePassword(userId: string, hashedPassword: string) {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
     })
   }
 }

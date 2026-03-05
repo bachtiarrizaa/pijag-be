@@ -10,32 +10,34 @@ const refreshTokenOptions: SignOptions = {
   expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '1d') as StringValue,
 }
 
-export const signAccessToken = (payload: JwtPayload): string => {
-  return jwt.sign(
-    payload,
-    process.env.JWT_ACCESS_SECRET as string,
-    accessTokenOptions
-  )
-}
+export class JwtUtils {
+  static signAccessToken(payload: JwtPayload): string {
+    return jwt.sign(
+      payload,
+      process.env.JWT_ACCESS_SECRET as string,
+      accessTokenOptions
+    )
+  }
 
-export const signRefreshToken = (payload: JwtPayload): string => {
-  return jwt.sign(
-    payload,
-    process.env.JWT_REFRESH_SECRET as string,
-    refreshTokenOptions
-  )
-}
+  static signRefreshToken(payload: JwtPayload): string {
+    return jwt.sign(
+      payload,
+      process.env.JWT_REFRESH_SECRET as string,
+      refreshTokenOptions
+    )
+  }
 
-export const verifyAccessToken = (token: string): JwtPayload => {
-  return jwt.verify(
-    token,
-    process.env.JWT_ACCESS_SECRET as string
-  ) as JwtPayload
-}
+  static verifyAccessToken(token: string): JwtPayload {
+    return jwt.verify(
+      token,
+      process.env.JWT_ACCESS_SECRET as string
+    ) as JwtPayload
+  }
 
-export const verifyRefreshToken = (token: string): JwtPayload => {
-  return jwt.verify(
-    token,
-    process.env.JWT_REFRESH_SECRET as string
-  ) as JwtPayload
+  static verifyRefreshToken(token: string): JwtPayload {
+    return jwt.verify(
+      token,
+      process.env.JWT_REFRESH_SECRET as string
+    ) as JwtPayload
+  }
 }
