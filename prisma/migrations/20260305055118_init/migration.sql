@@ -1,15 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `createdAt` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `phone` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `updatedAt` on the `users` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[username]` on the table `users` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `role_id` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `updated_at` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `username` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('pending', 'processing', 'ready', 'completed', 'canceled');
 
@@ -36,18 +24,6 @@ CREATE TYPE "DiscountType" AS ENUM ('percent', 'fixed');
 
 -- CreateEnum
 CREATE TYPE "PointHistoryType" AS ENUM ('earn', 'redeem', 'manual');
-
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "createdAt",
-DROP COLUMN "phone",
-DROP COLUMN "updatedAt",
-ADD COLUMN     "avatar" TEXT,
-ADD COLUMN     "birth_date" TIMESTAMP(3),
-ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "phone_number" TEXT,
-ADD COLUMN     "role_id" TEXT NOT NULL,
-ADD COLUMN     "updated_at" TIMESTAMP(3) NOT NULL,
-ADD COLUMN     "username" TEXT NOT NULL;
 
 -- CreateTable
 CREATE TABLE "blacklist_tokens" (
@@ -78,6 +54,23 @@ CREATE TABLE "roles" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "avatar" VARCHAR(255),
+    "name" VARCHAR(100) NOT NULL,
+    "username" VARCHAR(100) NOT NULL,
+    "email" VARCHAR(100) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "birth_of_date" DATE,
+    "phone_number" VARCHAR(100),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "role_id" TEXT NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -369,6 +362,15 @@ CREATE INDEX "password_reset_tokens_userId_idx" ON "password_reset_tokens"("user
 CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE INDEX "users_role_id_idx" ON "users"("role_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "customers_user_id_key" ON "customers"("user_id");
 
 -- CreateIndex
@@ -430,12 +432,6 @@ CREATE UNIQUE INDEX "vouchers_code_key" ON "vouchers"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "product_discounts_product_id_discount_id_key" ON "product_discounts"("product_id", "discount_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
-
--- CreateIndex
-CREATE INDEX "users_role_id_idx" ON "users"("role_id");
 
 -- AddForeignKey
 ALTER TABLE "password_reset_tokens" ADD CONSTRAINT "password_reset_tokens_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

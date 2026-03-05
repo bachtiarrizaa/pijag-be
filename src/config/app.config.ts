@@ -1,5 +1,6 @@
-import 'dotenv/config'
-import type { AppConfig } from '../types/config.type'
+import dotenv from 'dotenv'
+dotenv.config()
+import type { AppConfig } from '../types/config'
 
 export const appConfig: AppConfig = {
   APP_ENV: process.env.APP_ENV || 'development',

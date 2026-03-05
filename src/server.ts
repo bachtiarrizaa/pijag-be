@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import app from './app.js'
 import prisma from './config/db.config'
 import { appConfig } from './config/app.config'

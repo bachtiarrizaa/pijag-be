@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import routes from './routes/index.js'
+import routes from './routes'
+import { errorMiddleware } from './middlewares/error.middleware'
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ app.get('/', (_, res) => {
   res.send('Pijag Coffee API running')
 })
 
-app.use('/api/v1', routes)
+app.use('/api', routes)
+app.use(errorMiddleware)
 
 export default app
