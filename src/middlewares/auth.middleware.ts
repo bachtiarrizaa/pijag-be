@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 import Jwt from 'jsonwebtoken'
 import { ErrorHandler } from '../utils/error.utils'
 import { BlacklistTokenRepository } from '../repositories/blacklist-token.repository'
-import { verifyAccessToken } from '../utils/jwt.utils'
+import { JwtUtils } from '../utils/jwt.utils'
 
 export class AuthMiddleware {
   static async authenticateToken(
@@ -29,7 +29,7 @@ export class AuthMiddleware {
 
       let decoded
       try {
-        decoded = verifyAccessToken(token)
+        decoded = JwtUtils.verifyAccessToken(token)
       } catch (error) {
         if (error instanceof Jwt.TokenExpiredError) {
           throw new ErrorHandler(401, 'Access token expired')

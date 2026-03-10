@@ -4,11 +4,6 @@ import type { LoginDto, RefreshTokenDto, RegisterDto } from '../dtos/auth.dtos'
 import { CustomerRepository } from '../repositories/customer.repository'
 import { UserRepository } from '../repositories/user.repository'
 import { ErrorHandler } from '../utils/error.utils'
-// import {
-//   signAccessToken,
-//   signRefreshToken,
-//   verifyRefreshToken,
-// } from '../utils/jwt.utils'
 import { BlacklistTokenRepository } from '../repositories/blacklist-token.repository'
 import type { JwtPayload } from 'jsonwebtoken'
 import { JwtUtils } from '../utils/jwt.utils'
@@ -69,7 +64,9 @@ export class AuthService {
 
   static async logout(accessToken: string) {
     const decoded = Jwt.decode(accessToken) as JwtPayload | null
-    if (!decoded?.exp) throw new ErrorHandler(401, 'Invalid token')
+    if (!decoded?.exp) {
+      throw new ErrorHandler(401, 'Invalid token')
+    }
 
     const expiredAt = new Date(decoded.exp * 1000)
     await BlacklistTokenRepository.create(accessToken, expiredAt)

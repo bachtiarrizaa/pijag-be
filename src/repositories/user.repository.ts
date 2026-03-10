@@ -63,9 +63,16 @@ export class UserRepository {
         name: true,
         username: true,
         email: true,
+        birthDate: true,
+        phoneNumber: true,
         role: {
           select: { id: true, name: true },
         },
+        customer: {
+          select: { id: true, points: true },
+        },
+        createdAt: true,
+        updatedAt: true,
       },
     })
   }
