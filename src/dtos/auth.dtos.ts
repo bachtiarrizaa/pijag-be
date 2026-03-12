@@ -57,3 +57,7 @@ export interface OAuthDto {
   // password: string
   roleId: string
 }
+
+export interface SetPasswordDto {
+  password: string
+}
