@@ -4,8 +4,7 @@ import { UserRepository } from '../repositories/user.repository'
 import { RoleRepository } from '../repositories/role.repository'
 import { CustomerRepository } from '../repositories/customer.repository'
 import type { RequestHandler } from 'express'
-
-const CUSTOMER_ROLE = 'customer'
+import { CUSTOMER_ROLE_NAME } from '../constants/role.constants'
 
 export class PassportConfig {
   static init() {
@@ -25,28 +24,37 @@ export class PassportConfig {
               return done(new Error('No email from Google'), false)
             }
 
-            let user = await UserRepository.findByEmail(email)
+            const existingUser = await UserRepository.findByEmail(email)
 
-            if (!user) {
-              const username =
-                email.split('@')[0] + '_' + Math.random().toString().slice(2, 4)
-
-              const role = await RoleRepository.findRoleByName(CUSTOMER_ROLE)
-              if (!role) {
-                return done(new Error('Customer role not found'), false)
-              }
-
-              user = await UserRepository.createOAuthUser({
-                name,
-                username,
-                email,
-                roleId: role.id,
+            if (existingUser) {
+              return done(null, {
+                userId: existingUser.id,
+                roleId: existingUser.role.id,
+                roleName: existingUser.role.name,
               })
-
-              await CustomerRepository.create(user.id)
             }
 
-            return done(null, user)
+            const role = await RoleRepository.findRoleByName(CUSTOMER_ROLE_NAME)
+            if (!role) {
+              return done(new Error('Customer role not found'), false)
+            }
+
+            const username =
+              email.split('@')[0] + '_' + Math.random().toString().slice(2, 4)
+
+            const newUser = await UserRepository.createOAuthUser({
+              name,
+              username,
+              email,
+              roleId: role.id,
+            })
+            await CustomerRepository.create(newUser.id)
+
+            return done(null, {
+              userId: newUser.id,
+              roleId: role.id,
+              roleName: role.name,
+            })
           } catch (error) {
             return done(error, false)
           }
