@@ -6,6 +6,11 @@ import {
   refreshTokenSchema,
   registerSchema,
 } from '../validations/auth.validation'
+// import { ErrorHandler } from '../utils/error.utils'
+import { UserRepository } from '../repositories/user.repository'
+// import type { JwtPayload } from 'jsonwebtoken'
+import { JwtUtils } from '../utils/jwt.utils'
+import { ErrorHandler } from '../utils/error.utils'
 
 export class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -82,6 +87,43 @@ export class AuthController {
         data: refreshToken,
       })
     } catch (error) {
+      next(error)
+    }
+  }
+
+  static async googleCallback(req: Request, res: Response, next: NextFunction) {
+    try {
+      console.log('googleCallback called')
+      console.log('req.user:', req.user)
+
+      const rawUser = req.user as { id: string } | undefined
+      console.log('rawUser:', rawUser)
+
+      if (!rawUser) throw new ErrorHandler(401, 'Google authentication failed')
+
+      const user = await UserRepository.findById(rawUser.id)
+      console.log('user:', user)
+
+      if (!user) throw new ErrorHandler(401, 'User not found')
+
+      const payload = {
+        userId: user.id,
+        roleId: user.role.id,
+        roleName: user.role.name,
+      }
+
+      const accessToken = JwtUtils.signAccessToken(payload)
+      const refreshToken = JwtUtils.signRefreshToken(payload)
+
+      const redirectUrl = new URL(`${process.env.FRONTEND_URL}/auth/callback`)
+      redirectUrl.searchParams.set('accessToken', accessToken)
+      redirectUrl.searchParams.set('refreshToken', refreshToken)
+
+      console.log('redirectUrl:', redirectUrl.toString())
+
+      return res.redirect(redirectUrl.toString())
+    } catch (error) {
+      console.log('ERROR:', error)
       next(error)
     }
   }

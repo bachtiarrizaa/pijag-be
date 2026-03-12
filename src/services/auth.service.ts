@@ -38,6 +38,13 @@ export class AuthService {
       throw new ErrorHandler(401, 'Invalid email or password')
     }
 
+    if (!user.password) {
+      throw new ErrorHandler(
+        401,
+        'This account uses Google login. Please login with Google.'
+      )
+    }
+
     const isPasswordValid = await bcrypt.compare(
       loginDto.password,
       user.password
@@ -95,6 +102,19 @@ export class AuthService {
       roleId: user.role.id,
       roleName: user.role.name,
     }
+    const accessToken = JwtUtils.signAccessToken(payload)
+    const refreshToken = JwtUtils.signRefreshToken(payload)
+
+    return { accessToken, refreshToken }
+  }
+
+  static async googleCallback(
+    userId: string,
+    roleId: string,
+    roleName: string
+  ) {
+    const payload = { userId, roleId, roleName }
+
     const accessToken = JwtUtils.signAccessToken(payload)
     const refreshToken = JwtUtils.signRefreshToken(payload)
 

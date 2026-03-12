@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import prisma from '../config/db.config'
-import type { RegisterDto } from '../dtos/auth.dtos'
+import type { OAuthDto, RegisterDto } from '../dtos/auth.dtos'
 
 export class UserRepository {
   static async create(dto: RegisterDto) {
@@ -23,6 +23,18 @@ export class UserRepository {
         },
         createdAt: true,
         updatedAt: true,
+      },
+    })
+  }
+
+  static async createOAuthUser(dto: OAuthDto) {
+    return prisma.user.create({
+      data: {
+        name: dto.name,
+        username: dto.username,
+        email: dto.email,
+        password: null,
+        roleId: dto.roleId,
       },
     })
   }

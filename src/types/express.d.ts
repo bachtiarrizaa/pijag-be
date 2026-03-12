@@ -1,4 +1,4 @@
-import type { JwtPayload } from 'jsonwebtoken'
+import type { JwtPayload } from './config'
 
 declare global {
   namespace Express {
@@ -7,3 +7,18 @@ declare global {
     }
   }
 }
+
+// declare global {
+//   namespace Express {
+//     interface Request {
+//       user?: {
+//         userId: string
+//         roleId: string
+//         roleName: string
+//         exp?: number
+//       }
+//     }
+//   }
+// }
+
+// export {}

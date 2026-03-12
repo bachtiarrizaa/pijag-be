@@ -49,3 +49,11 @@ export interface ResetPasswordDto {
   otp: string
   password: string
 }
+
+export interface OAuthDto {
+  name: string
+  username: string
+  email: string
+  // password: string
+  roleId: string
+}
