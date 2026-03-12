@@ -40,3 +40,11 @@ export const resetPasswordSchema = z.object({
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(/[0-9]/, 'Password must contain at least one number'),
 })
+
+export const setPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(8, 'Password must be at leat 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-1]/, 'Password must contain at least one number'),
+})

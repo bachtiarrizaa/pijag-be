@@ -89,6 +89,13 @@ export class UserRepository {
     })
   }
 
+  static async findUserWithPassword(userId: string) {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, password: true },
+    })
+  }
+
   static async updatePassword(userId: string, hashedPassword: string) {
     return prisma.user.update({
       where: { id: userId },
