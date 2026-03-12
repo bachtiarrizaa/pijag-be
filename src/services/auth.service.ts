@@ -7,8 +7,8 @@ import { ErrorHandler } from '../utils/error.utils'
 import { BlacklistTokenRepository } from '../repositories/blacklist-token.repository'
 import type { JwtPayload } from 'jsonwebtoken'
 import { JwtUtils } from '../utils/jwt.utils'
-
-const CUSTOMER_ROLE_NAME = 'customer'
+import { RoleRepository } from '../repositories/role.repository'
+import { CUSTOMER_ROLE_NAME } from '../constants/role.constants'
 
 export class AuthService {
   static async register(registerDto: RegisterDto) {
@@ -24,7 +24,20 @@ export class AuthService {
       throw new ErrorHandler(409, 'Email already taken')
     }
 
-    const user = await UserRepository.create(registerDto)
+    const role = await RoleRepository.findRoleByName(CUSTOMER_ROLE_NAME)
+    if (!role) {
+      throw new ErrorHandler(404, 'Customer role not found')
+    }
+
+    const hashedPassword = await bcrypt.hash(registerDto.password, 12)
+
+    const user = await UserRepository.create({
+      name: registerDto.name,
+      username: registerDto.username,
+      email: registerDto.email,
+      password: hashedPassword,
+      roleId: role.id,
+    })
     if (user.role?.name === CUSTOMER_ROLE_NAME) {
       await CustomerRepository.create(user.id)
     }

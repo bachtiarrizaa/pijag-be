@@ -1,17 +1,16 @@
-import bcrypt from 'bcryptjs'
 import prisma from '../config/db.config'
-import type { OAuthDto, RegisterDto } from '../dtos/auth.dtos'
+import type { OAuthDto } from '../dtos/auth.dtos'
+import type { CreateUserDto } from '../dtos/user.dtos'
 
 export class UserRepository {
-  static async create(dto: RegisterDto) {
-    const hashedPassword = await bcrypt.hash(dto.password, 12)
+  static async create(dto: CreateUserDto) {
     return prisma.user.create({
       data: {
         name: dto.name,
         username: dto.username,
         email: dto.email,
-        password: hashedPassword,
-        roleId: 'cmmd1srwj0002yljxc497w6er',
+        password: dto.password,
+        roleId: dto.roleId,
       },
       select: {
         id: true,
@@ -36,6 +35,10 @@ export class UserRepository {
         password: null,
         roleId: dto.roleId,
       },
+      select: {
+        id: true,
+        role: { select: { id: true, name: true } },
+      },
     })
   }
 
@@ -48,6 +51,12 @@ export class UserRepository {
   static async findByEmail(email: string) {
     return prisma.user.findFirst({
       where: { email },
+      select: {
+        id: true,
+        email: true,
+        roleId: true,
+        role: { select: { id: true, name: true } },
+      },
     })
   }
 
