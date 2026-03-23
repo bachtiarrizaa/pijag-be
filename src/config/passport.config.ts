@@ -4,7 +4,8 @@ import { UserRepository } from '../repositories/user.repository'
 import { RoleRepository } from '../repositories/role.repository'
 import { CustomerRepository } from '../repositories/customer.repository'
 import type { RequestHandler } from 'express'
-import { CUSTOMER_ROLE_NAME } from '../constants/role.constants'
+import { RoleNames } from '../constants/role.constants'
+// import { CUSTOMER_ROLE_NAME } from '../constants/role.constants'
 
 export class PassportConfig {
   static init() {
@@ -34,7 +35,7 @@ export class PassportConfig {
               })
             }
 
-            const role = await RoleRepository.findRoleByName(CUSTOMER_ROLE_NAME)
+            const role = await RoleRepository.findRoleByName(RoleNames.CUSTOMER)
             if (!role) {
               return done(new Error('Customer role not found'), false)
             }

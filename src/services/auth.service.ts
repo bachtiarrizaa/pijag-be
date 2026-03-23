@@ -8,7 +8,8 @@ import { BlacklistTokenRepository } from '../repositories/blacklist-token.reposi
 import type { JwtPayload } from 'jsonwebtoken'
 import { JwtUtils } from '../utils/jwt.utils'
 import { RoleRepository } from '../repositories/role.repository'
-import { CUSTOMER_ROLE_NAME } from '../constants/role.constants'
+import { RoleNames } from '../constants/role.constants'
+// import { CUSTOMER_ROLE_NAME } from '../constants/role.constants'
 
 export class AuthService {
   static async register(registerDto: RegisterDto) {
@@ -24,9 +25,9 @@ export class AuthService {
       throw new ErrorHandler(409, 'Email already taken')
     }
 
-    const role = await RoleRepository.findRoleByName(CUSTOMER_ROLE_NAME)
+    const role = await RoleRepository.findRoleByName(RoleNames.ADMIN)
     if (!role) {
-      throw new ErrorHandler(404, 'Customer role not found')
+      throw new ErrorHandler(404, 'role not found')
     }
 
     const hashedPassword = await bcrypt.hash(registerDto.password, 12)
@@ -38,7 +39,7 @@ export class AuthService {
       password: hashedPassword,
       roleId: role.id,
     })
-    if (user.role?.name === CUSTOMER_ROLE_NAME) {
+    if (user.role?.name === RoleNames.CUSTOMER) {
       await CustomerRepository.create(user.id)
     }
 
