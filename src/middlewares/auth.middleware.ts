@@ -51,7 +51,7 @@ export class AuthMiddleware {
     return (req: Request, res: Response, next: NextFunction): void => {
       try {
         const user = req.user as JwtPayload
-        console.log('User dari req: ', user)
+        // console.log('User dari req: ', user)
 
         if (!user) {
           throw new ErrorHandler(403, 'Forbidden: No user data')
