@@ -17,5 +17,8 @@ export interface UpdateDiscountDto {
   value?: number
   startDate?: Date | null
   endDate?: Date | null
-  isActive?: boolean
+}
+
+export interface UpdateStatusDiscountDto {
+  isActive: boolean
 }
