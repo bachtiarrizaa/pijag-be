@@ -1,4 +1,8 @@
-import type { CreateVoucherDto, UpdateVoucherDto } from '../dtos/voucher.dtos'
+import type {
+  CreateVoucherDto,
+  UpdateStatusVoucherDto,
+  UpdateVoucherDto,
+} from '../dtos/voucher.dtos'
 import { VoucherRepository } from '../repositories/voucher.repository'
 import { ErrorHandler } from '../utils/error.utils'
 
@@ -51,6 +55,18 @@ export class VoucherService {
     }
 
     const voucher = await VoucherRepository.update(voucherId, voucherDto)
+    return voucher
+  }
+
+  static async updateStatus(
+    voucherId: string,
+    voucherDto: UpdateStatusVoucherDto
+  ) {
+    const findVoucher = await VoucherRepository.findById(voucherId)
+    if (!findVoucher) {
+      throw new ErrorHandler(404, 'Voucher not found')
+    }
+    const voucher = await VoucherRepository.updateStatus(voucherId, voucherDto)
     return voucher
   }
 

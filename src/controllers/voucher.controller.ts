@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { VoucherService } from '../services/voucher.service'
 import {
   createVoucherSchema,
+  updateStatusVoucherSchema,
   updateVoucherSchema,
 } from '../validations/voucher.validation'
 import { ValidationUtils } from '../utils/validation.utils'
@@ -41,9 +42,9 @@ export class VoucherController {
     try {
       const voucherId = String(req.params.id)
 
-      const invalidId = ValidationUtils.id(res, voucherId)
-      if (!invalidId) {
-        return ValidationUtils.id(res, voucherId)
+      const validId = ValidationUtils.id(res, voucherId)
+      if (!validId) {
+        return
       }
 
       const voucher = await VoucherService.getVoucherById(voucherId)
@@ -61,9 +62,9 @@ export class VoucherController {
     try {
       const voucherId = String(req.params.id)
 
-      const invalidId = ValidationUtils.id(res, voucherId)
-      if (!invalidId) {
-        return ValidationUtils.id(res, voucherId)
+      const validId = ValidationUtils.id(res, voucherId)
+      if (!validId) {
+        return
       }
 
       const parsed = updateVoucherSchema.safeParse(req.body)
@@ -82,9 +83,40 @@ export class VoucherController {
     }
   }
 
+  static async updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const voucherId = String(req.params.id)
+
+      const validId = ValidationUtils.id(res, voucherId)
+      if (!validId) {
+        return
+      }
+
+      const parsed = updateStatusVoucherSchema.safeParse(req.body)
+      if (!parsed.success) {
+        return ValidationUtils.request(res, parsed.error)
+      }
+
+      const voucher = await VoucherService.updateStatus(voucherId, parsed.data)
+      return res.status(200).json({
+        success: true,
+        message: 'Voucher status updated successfully',
+        data: voucher,
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const voucherId = String(req.params.id)
+
+      const validId = ValidationUtils.id(res, voucherId)
+      if (!validId) {
+        return
+      }
+
       await VoucherService.delete(voucherId)
       return res.status(200).json({
         success: true,
