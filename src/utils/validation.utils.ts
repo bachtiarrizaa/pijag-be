@@ -11,13 +11,14 @@ export class ValidationUtils {
     })
   }
 
-  static id(res: Response, id: string) {
+  static id(res: Response, id: string): string | null {
     const parsed = z.string().cuid().safeParse(id)
     if (!parsed.success) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: 'Invalid ID format',
       })
+      return null
     }
     return parsed.data
   }

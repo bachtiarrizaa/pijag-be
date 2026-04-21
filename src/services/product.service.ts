@@ -1,4 +1,9 @@
-import type { CreateProductDto, UpdateProductDto } from '../dtos/product.dtos'
+import type {
+  CreateProductDto,
+  UpdateProductDto,
+  UpdateStatusProductDto,
+} from '../dtos/product.dtos'
+import { CategoryRepository } from '../repositories/category.repository'
 import { ProductRepository } from '../repositories/product.repository'
 import { ErrorHandler } from '../utils/error.utils'
 
@@ -31,6 +36,15 @@ export class ProductService {
       throw new ErrorHandler(404, 'Product not found')
     }
 
+    if (productDto.categoryId) {
+      const findCategory = await CategoryRepository.findById(
+        productDto.categoryId
+      )
+      if (!findCategory) {
+        throw new ErrorHandler(404, 'Category not found')
+      }
+    }
+
     if (productDto.name) {
       const existingProduct = await ProductRepository.findByName(
         productDto.name
@@ -41,6 +55,19 @@ export class ProductService {
     }
 
     const product = await ProductRepository.update(productId, productDto)
+    return product
+  }
+
+  static async updateStatus(
+    productId: string,
+    productDto: UpdateStatusProductDto
+  ) {
+    const findProduct = await ProductRepository.findById(productId)
+    if (!findProduct) {
+      throw new ErrorHandler(404, 'Product not found')
+    }
+
+    const product = await ProductRepository.updateStatus(productId, productDto)
     return product
   }
 
