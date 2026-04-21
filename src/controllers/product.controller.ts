@@ -3,7 +3,7 @@ import {
   productSchema,
   updateProductSchema,
 } from '../validations/product.validation'
-import { validateRequest } from '../utils/validation.utils'
+import { ValidationUtils } from '../utils/validation.utils'
 import { ProductService } from '../services/product.service'
 
 export class ProductController {
@@ -12,7 +12,7 @@ export class ProductController {
       const image = req.file ? `/uploads/product/${req.file.filename}` : null
       const parsed = productSchema.safeParse({ ...req.body, image })
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const product = await ProductService.create(parsed.data)
@@ -61,7 +61,7 @@ export class ProductController {
         : undefined
       const parsed = updateProductSchema.safeParse({ ...req.body, image })
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const product = await ProductService.update(productId, parsed.data)

@@ -4,6 +4,8 @@ import profileRoutes from './profile.routes'
 import roleRoutes from './role.routes'
 import categoryRoutes from './category.routes'
 import productRoutes from './product.routes'
+import discountRoutes from './discount.routes'
+import voucherRoutes from './voucher.routes'
 
 const router = Router()
 
@@ -12,5 +14,7 @@ router.use('/profiles', profileRoutes)
 router.use('/roles', roleRoutes)
 router.use('/categories', categoryRoutes)
 router.use('/products', productRoutes)
+router.use('/discounts', discountRoutes)
+router.use('/vouchers', voucherRoutes)
 
 export default router
