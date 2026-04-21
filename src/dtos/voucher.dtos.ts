@@ -25,5 +25,8 @@ export interface UpdateVoucherDto {
   perUserLimit?: number
   startDate?: Date | null
   endDate?: Date | null
-  isActive?: boolean
+}
+
+export interface UpdateStatusVoucherDto {
+  isActive: boolean
 }

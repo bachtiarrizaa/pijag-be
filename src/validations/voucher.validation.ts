@@ -51,7 +51,10 @@ export const createVoucherSchema = voucherBaseSchema
 
 export const updateVoucherSchema = voucherBaseSchema
   .omit({ isActive: true })
-  .extend({ isActive: z.coerce.boolean().optional() })
   .partial()
   .superRefine(voucherRefinements.percentValue)
   .superRefine(voucherRefinements.dateRange)
+
+export const updateStatusVoucherSchema = z.object({
+  isActive: z.coerce.boolean(),
+})

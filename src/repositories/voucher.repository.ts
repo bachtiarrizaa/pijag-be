@@ -1,5 +1,9 @@
 import prisma from '../config/db.config'
-import type { CreateVoucherDto, UpdateVoucherDto } from '../dtos/voucher.dtos'
+import type {
+  CreateVoucherDto,
+  UpdateStatusVoucherDto,
+  UpdateVoucherDto,
+} from '../dtos/voucher.dtos'
 
 export class VoucherRepository {
   static async findVouchers() {
@@ -34,6 +38,13 @@ export class VoucherRepository {
     return prisma.voucher.update({
       where: { id: voucherId },
       data: dto,
+    })
+  }
+
+  static async updateStatus(voucherId: string, dto: UpdateStatusVoucherDto) {
+    return prisma.voucher.update({
+      where: { id: voucherId },
+      data: { isActive: dto.isActive },
     })
   }
 
