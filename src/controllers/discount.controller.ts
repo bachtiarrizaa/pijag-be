@@ -46,6 +46,11 @@ export class DiscountController {
     try {
       const discountId = String(req.params.id)
 
+      const invalidId = ValidationUtils.id(res, discountId)
+      if (!invalidId) {
+        return ValidationUtils.id(res, discountId)
+      }
+
       const discount = await DiscountService.getDiscountById(discountId)
       return res.status(200).json({
         success: true,
@@ -60,6 +65,11 @@ export class DiscountController {
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const discountId = String(req.params.id)
+
+      const invalidId = ValidationUtils.id(res, discountId)
+      if (!invalidId) {
+        return ValidationUtils.id(res, discountId)
+      }
 
       const parsed = updateDiscountSchema.safeParse(req.body)
       if (!parsed.success) {
@@ -80,6 +90,12 @@ export class DiscountController {
   static async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const discountId = String(req.params.id)
+
+      const invalidId = ValidationUtils.id(res, discountId)
+      if (!invalidId) {
+        return ValidationUtils.id(res, discountId)
+      }
+
       await DiscountService.delete(discountId)
       return res.status(200).json({
         success: true,

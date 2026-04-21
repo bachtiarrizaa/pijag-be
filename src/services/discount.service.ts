@@ -29,8 +29,8 @@ export class DiscountService {
     return discount
   }
 
-  static async update(dsicountId: string, discountDto: UpdateDiscountDto) {
-    const findDiscount = await DiscountRepository.findById(dsicountId)
+  static async update(discountId: string, discountDto: UpdateDiscountDto) {
+    const findDiscount = await DiscountRepository.findById(discountId)
     if (!findDiscount) {
       throw new ErrorHandler(404, 'Discount not found')
     }
@@ -43,7 +43,7 @@ export class DiscountService {
         throw new ErrorHandler(409, 'Discount name already exists')
       }
     }
-    const discount = await DiscountRepository.update(dsicountId, discountDto)
+    const discount = await DiscountRepository.update(discountId, discountDto)
     return discount
   }
 
