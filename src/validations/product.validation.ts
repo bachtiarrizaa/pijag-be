@@ -15,5 +15,13 @@ export const productSchema = z.object({
 })
 
 export const updateProductSchema = productSchema
-  .omit({ isActive: true })
+  .omit({ isActive: true, isAvailable: true, image: true })
+  .extend({
+    isAvailable: z.coerce.boolean().optional(),
+    image: z.string().optional(),
+  })
   .partial()
+
+export const updateStatusProductSchema = z.object({
+  isActive: z.coerce.boolean(),
+})

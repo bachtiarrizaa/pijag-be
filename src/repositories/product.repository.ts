@@ -1,5 +1,9 @@
 import prisma from '../config/db.config'
-import type { CreateProductDto, UpdateProductDto } from '../dtos/product.dtos'
+import type {
+  CreateProductDto,
+  UpdateProductDto,
+  UpdateStatusProductDto,
+} from '../dtos/product.dtos'
 
 export class ProductRepository {
   static async create(dto: CreateProductDto) {
@@ -39,6 +43,13 @@ export class ProductRepository {
     return prisma.product.update({
       where: { id: productId },
       data: dto,
+    })
+  }
+
+  static async updateStatus(productId: string, dto: UpdateStatusProductDto) {
+    return prisma.product.update({
+      where: { id: productId },
+      data: { isActive: dto.isActive },
     })
   }
 
