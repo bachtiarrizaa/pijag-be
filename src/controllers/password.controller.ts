@@ -3,7 +3,7 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
 } from '../validations/auth.validation'
-import { validateRequest } from '../utils/validation.utils'
+import { ValidationUtils } from '../utils/validation.utils'
 import { PasswordService } from '../services/password.service'
 
 export class PasswordController {
@@ -11,7 +11,7 @@ export class PasswordController {
     try {
       const parsed = forgotPasswordSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       await PasswordService.forgotPassword(parsed.data)
@@ -29,7 +29,7 @@ export class PasswordController {
     try {
       const parsed = resetPasswordSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       await PasswordService.resetPassword(parsed.data)

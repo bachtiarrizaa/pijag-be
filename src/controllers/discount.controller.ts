@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { validateRequest } from '../utils/validation.utils'
+import { ValidationUtils } from '../utils/validation.utils'
 import { DiscountService } from '../services/discount.service'
 import {
   createDiscountSchema,
@@ -11,7 +11,7 @@ export class DiscountController {
     try {
       const parsed = createDiscountSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const discount = await DiscountService.create(parsed.data)
@@ -63,7 +63,7 @@ export class DiscountController {
 
       const parsed = updateDiscountSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const discount = await DiscountService.update(discountId, parsed.data)
