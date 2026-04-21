@@ -6,7 +6,8 @@ const router = Router()
 router.post('/', DiscountController.create)
 router.get('/', DiscountController.getDiscounts)
 router.get('/:id', DiscountController.getDiscountById)
-router.put('/:id', DiscountController.update)
+router.patch('/:id/status', DiscountController.updateStatus)
+router.patch('/:id', DiscountController.update)
 router.delete('/:id', DiscountController.delete)
 
 export default router

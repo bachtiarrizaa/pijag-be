@@ -4,6 +4,7 @@ import { DiscountService } from '../services/discount.service'
 import {
   createDiscountSchema,
   updateDiscountSchema,
+  updateStatusDiscountSchema,
 } from '../validations/discount.validation'
 
 export class DiscountController {
@@ -46,9 +47,9 @@ export class DiscountController {
     try {
       const discountId = String(req.params.id)
 
-      const invalidId = ValidationUtils.id(res, discountId)
-      if (!invalidId) {
-        return ValidationUtils.id(res, discountId)
+      const validId = ValidationUtils.id(res, discountId)
+      if (!validId) {
+        return
       }
 
       const discount = await DiscountService.getDiscountById(discountId)
@@ -62,13 +63,41 @@ export class DiscountController {
     }
   }
 
+  static async updateStatus(req: Request, res: Response, next: NextFunction) {
+    try {
+      const discountId = String(req.params.id)
+
+      const validId = ValidationUtils.id(res, discountId)
+      if (!validId) {
+        return
+      }
+
+      const parsed = updateStatusDiscountSchema.safeParse(req.body)
+      if (!parsed.success) {
+        return ValidationUtils.request(res, parsed.error)
+      }
+
+      const discount = await DiscountService.updateStatus(
+        discountId,
+        parsed.data
+      )
+      return res.status(200).json({
+        success: true,
+        message: 'Discount status updated successfully',
+        data: discount,
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const discountId = String(req.params.id)
 
-      const invalidId = ValidationUtils.id(res, discountId)
-      if (!invalidId) {
-        return ValidationUtils.id(res, discountId)
+      const validId = ValidationUtils.id(res, discountId)
+      if (!validId) {
+        return
       }
 
       const parsed = updateDiscountSchema.safeParse(req.body)
@@ -91,9 +120,9 @@ export class DiscountController {
     try {
       const discountId = String(req.params.id)
 
-      const invalidId = ValidationUtils.id(res, discountId)
-      if (!invalidId) {
-        return ValidationUtils.id(res, discountId)
+      const validId = ValidationUtils.id(res, discountId)
+      if (!validId) {
+        return
       }
 
       await DiscountService.delete(discountId)

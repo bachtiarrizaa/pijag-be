@@ -2,6 +2,7 @@ import prisma from '../config/db.config'
 import type {
   CreateDiscountDto,
   UpdateDiscountDto,
+  UpdateStatusDiscountDto,
 } from '../dtos/discount.dtos'
 
 export class DiscountRepository {
@@ -25,6 +26,13 @@ export class DiscountRepository {
 
   static async findDiscounts() {
     return prisma.discount.findMany()
+  }
+
+  static async updateStatus(discountId: string, dto: UpdateStatusDiscountDto) {
+    return prisma.discount.update({
+      where: { id: discountId },
+      data: { isActive: dto.isActive },
+    })
   }
 
   static async update(discountId: string, dto: UpdateDiscountDto) {

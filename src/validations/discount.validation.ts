@@ -50,7 +50,10 @@ export const createDiscountSchema = discountBaseSchema
 
 export const updateDiscountSchema = discountBaseSchema
   .omit({ isActive: true })
-  .extend({ isActive: z.coerce.boolean().optional() })
   .partial()
   .superRefine(discountRefinements.percentValue)
   .superRefine(discountRefinements.dateRange)
+
+export const updateStatusDiscountSchema = z.object({
+  isActive: z.coerce.boolean(),
+})

@@ -1,6 +1,7 @@
 import type {
   CreateDiscountDto,
   UpdateDiscountDto,
+  UpdateStatusDiscountDto,
 } from '../dtos/discount.dtos'
 import { DiscountRepository } from '../repositories/discount.repository'
 import { ErrorHandler } from '../utils/error.utils'
@@ -26,6 +27,22 @@ export class DiscountService {
     if (!discount) {
       throw new ErrorHandler(404, 'Discount not found')
     }
+    return discount
+  }
+
+  static async updateStatus(
+    discountId: string,
+    dicountDto: UpdateStatusDiscountDto
+  ) {
+    const findDiscount = await DiscountRepository.findById(discountId)
+    if (!findDiscount) {
+      throw new ErrorHandler(404, 'Discount not found')
+    }
+
+    const discount = await DiscountRepository.updateStatus(
+      discountId,
+      dicountDto
+    )
     return discount
   }
 
