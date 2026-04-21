@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { UserService } from '../services/user.service'
 import type { JwtPayload } from 'jsonwebtoken'
 import { setPasswordSchema } from '../validations/auth.validation'
-import { validateRequest } from '../utils/validation.utils'
+import { ValidationUtils } from '../utils/validation.utils'
 
 export class UserController {
   static async getProfile(req: Request, res: Response, next: NextFunction) {
@@ -25,7 +25,7 @@ export class UserController {
     try {
       const parsed = setPasswordSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const { userId } = req.user as JwtPayload

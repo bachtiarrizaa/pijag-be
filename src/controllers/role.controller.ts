@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { validateRequest } from '../utils/validation.utils'
+import { ValidationUtils } from '../utils/validation.utils'
 import { RoleService } from '../services/role.service'
 import { roleSchema } from '../validations/role.valisation'
 // import { ErrorHandler } from '../utils/error.utils'
@@ -9,7 +9,7 @@ export class RoleController {
     try {
       const parsed = roleSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const role = await RoleService.create(parsed.data)
@@ -42,7 +42,7 @@ export class RoleController {
 
       const parsed = roleSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const role = await RoleService.update(roleId, parsed.data)

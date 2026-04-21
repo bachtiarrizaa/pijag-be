@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 import { categorySchema } from '../validations/category.validation'
-import { validateRequest } from '../utils/validation.utils'
+import { ValidationUtils } from '../utils/validation.utils'
 import { CategoryService } from '../services/category.service'
 
 export class CategoryController {
@@ -8,7 +8,7 @@ export class CategoryController {
     try {
       const parsed = categorySchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const category = await CategoryService.create(parsed.data)
@@ -60,7 +60,7 @@ export class CategoryController {
 
       const parsed = categorySchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const category = await CategoryService.update(categoryId, parsed.data)

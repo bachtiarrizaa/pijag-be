@@ -1,6 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
 import { AuthService } from '../services/auth.service'
-import { validateRequest } from '../utils/validation.utils'
 import {
   loginSchema,
   refreshTokenSchema,
@@ -8,13 +7,14 @@ import {
 } from '../validations/auth.validation'
 import { ErrorHandler } from '../utils/error.utils'
 import type { JwtPayload } from '../types/config'
+import { ValidationUtils } from '../utils/validation.utils'
 
 export class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
     try {
       const parsed = registerSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const register = await AuthService.register(parsed.data)
@@ -32,7 +32,7 @@ export class AuthController {
     try {
       const parsed = loginSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const login = await AuthService.login(parsed.data)
@@ -74,7 +74,7 @@ export class AuthController {
     try {
       const parsed = refreshTokenSchema.safeParse(req.body)
       if (!parsed.success) {
-        return validateRequest(res, parsed.error)
+        return ValidationUtils.request(res, parsed.error)
       }
 
       const refreshToken = await AuthService.refreshToken(parsed.data)
